@@ -153,24 +153,25 @@ struct MonthlySummaryView: View {
     }
     
     private func dailyTrend(stats: MonthlyStats) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
+        let monthRecords = dataManager.getRecords(forMonth: selectedMonth)
+        let calendar = Calendar.current
+        var dailyCounts: [Int: Int] = [:]
+        
+        for record in monthRecords {
+            let day = calendar.component(.day, from: record.date)
+            dailyCounts[day, default: 0] += 1
+        }
+        
+        let maxCount = dailyCounts.values.max() ?? 1
+        let totalDays = calendar.range(of: .day, in: .month, for: selectedMonth)?.count ?? 30
+        
+        return VStack(alignment: .leading, spacing: 12) {
             Text("每日趋势")
                 .font(.headline)
                 .padding(.horizontal)
             
-            let monthRecords = dataManager.getRecords(forMonth: selectedMonth)
-            let calendar = Calendar.current
-            var dailyCounts: [Int: Int] = [:]
-            
-            for record in monthRecords {
-                let day = calendar.component(.day, from: record.date)
-                dailyCounts[day, default: 0] += 1
-            }
-            
-            let maxCount = dailyCounts.values.max() ?? 1
-            
             VStack(spacing: 4) {
-                ForEach(1...calendar.range(of: .day, in: .month, for: selectedMonth)?.count ?? 30, id: \.self) { day in
+                ForEach(1...totalDays, id: \.self) { day in
                     let count = dailyCounts[day] ?? 0
                     let height = maxCount > 0 ? CGFloat(count) / CGFloat(maxCount) : 0
                     

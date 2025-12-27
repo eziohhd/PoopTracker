@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 class DataManager: ObservableObject {
     @Published var records: [PoopRecord] = []

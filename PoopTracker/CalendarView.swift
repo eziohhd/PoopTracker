@@ -77,7 +77,7 @@ struct CalendarView: View {
         let days = getDaysInMonth()
         let firstWeekday = getFirstWeekdayOfMonth()
         
-        return VStack(spacing: 8) {
+        VStack(spacing: 8) {
             // 星期标题
             HStack(spacing: 0) {
                 ForEach(["日", "一", "二", "三", "四", "五", "六"], id: \.self) { day in
